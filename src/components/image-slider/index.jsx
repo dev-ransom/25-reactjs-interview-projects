@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { BsArrowLeftCircleFill, BsArrowRightCircleFill } from "react-icons/bs";
 import "./styles.css";
 
-export default function ImageSlider({ url, limit = 5, page = 1 }) {
+export default function ImageSlider({ url, limit = 5, page = 1, autoSlideImages = 3000 }) {
   const [images, setImages] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [errorMsg, setErrorMsg] = useState(null);
@@ -38,6 +38,15 @@ export default function ImageSlider({ url, limit = 5, page = 1 }) {
   }, [url]);
 
   console.log(images);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % images.length);
+    }, autoSlideImages)
+    return () => {
+      clearInterval(timer)
+    }
+  }, [images, autoSlideImages])
 
   if (loading) {
     return <div>Loading data ! Please wait</div>;
